@@ -13,23 +13,21 @@ import oru.inf.InfException;
  * @author hillv
  */
 public class InLoggningAgent extends javax.swing.JFrame {
-    
+
     private InfDB idb;
 
-   
     /**
      * Creates new form InLoggning
      */
     public InLoggningAgent() {
         initComponents();
-        try{
+        try {
             idb = new InfDB("mibdb", "3306", "mibdba", "mibkey");
             System.out.println("funka");
-        }
-         catch(InfException ettUndantag) {
+        } catch (InfException ettUndantag) {
             JOptionPane.showMessageDialog(null, "Något gick fel!");
             System.out.println("Internt felmeddelande" + ettUndantag.getMessage());
-        }     
+        }
     }
 
     /**
@@ -99,42 +97,38 @@ public class InLoggningAgent extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoggaInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoggaInActionPerformed
-    
-        if (txtEpost.getText().isEmpty() || txtLosenord.getText().isEmpty()) {
-    // Om någon av textrutorna är tom, visa felmeddelande
-    JOptionPane.showMessageDialog(null, "Fyll i båda fälten!");
-    txtEpost.requestFocus();
-    txtLosenord.requestFocus();
-} else {
-    try {
-        String epost = txtEpost.getText();
-        String losenord = txtLosenord.getText();
-        
-        
-        
-        
-        // Formatera strängarna korrekt i SQL-frågan
-        String fraga = "SELECT EPOST, LOSENORD FROM AGENT WHERE EPOST = '" + epost + "' AND LOSENORD = '" + losenord + "'";
-        
-        // Utför frågan och hämta resultatet
-        String svar = idb.fetchSingle(fraga);
-    // Kontrollera om resultatet är tomt eller null
-            if (svar != null && !svar.isEmpty()) {
-                // Uppdatera användargränssnittet eller gör något med resultatet
-                 EfterInlogg nytt = new EfterInlogg(txtEpost.getText());
-                 InLoggningAgent.this.setVisible(false);
-                 nytt.setVisible(true);
-            } else {
-                // Uppdatera användargränssnittet eller gör något annat om inloggningen misslyckades
-                lbValkommen.setText("Inloggning misslyckades. Kontrollera e-post och lösenord.");
-            }
 
-        
-    } catch (InfException e) {
-        JOptionPane.showMessageDialog(null, "Något gick fel!");
-        System.out.println("Internt felmeddelande" + e.getMessage());
-    }
-}
+        if (txtEpost.getText().isEmpty() || txtLosenord.getText().isEmpty()) {
+            // Om någon av textrutorna är tom, visa felmeddelande
+            JOptionPane.showMessageDialog(null, "Fyll i båda fälten!");
+            txtEpost.requestFocus();
+            txtLosenord.requestFocus();
+        } else {
+            try {
+                String epost = txtEpost.getText();
+                String losenord = txtLosenord.getText();
+
+                // Formatera strängarna korrekt i SQL-frågan
+                String fraga = "SELECT EPOST, LOSENORD FROM AGENT WHERE EPOST = '" + epost + "' AND LOSENORD = '" + losenord + "'";
+
+                // Utför frågan och hämta resultatet
+                String svar = idb.fetchSingle(fraga);
+                // Kontrollera om resultatet är tomt eller null
+                if (svar != null && !svar.isEmpty()) {
+                    // Uppdatera användargränssnittet eller gör något med resultatet
+                    EfterInlogg nytt = new EfterInlogg(txtEpost.getText(), txtLosenord.getText());
+                    InLoggningAgent.this.setVisible(false);
+                    nytt.setVisible(true);
+                } else {
+                    // Uppdatera användargränssnittet eller gör något annat om inloggningen misslyckades
+                    lbValkommen.setText("Inloggning misslyckades. Kontrollera e-post och lösenord.");
+                }
+
+            } catch (InfException e) {
+                JOptionPane.showMessageDialog(null, "Något gick fel!");
+                System.out.println("Internt felmeddelande" + e.getMessage());
+            }
+        }
 
     }//GEN-LAST:event_btnLoggaInActionPerformed
 

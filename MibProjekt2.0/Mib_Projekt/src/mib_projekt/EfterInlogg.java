@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package mib_projekt;
+
 import javax.swing.JOptionPane;
 import oru.inf.InfDB;
 import oru.inf.InfException;
@@ -12,41 +13,48 @@ import oru.inf.InfException;
  * @author hillv
  */
 public class EfterInlogg extends javax.swing.JFrame {
-      
-      private InfDB idb;
-      private String epost;  
+
+    private InfDB idb;
+    private String epost;
+    private String nuvarandeLosenord;
     /**
-     * Creates new form EfterInlogg
+     * Skapar ett nytt EfterInlogg-fönster.
      */
-     public EfterInlogg() {
+    // Konstruktör för EfterInlogg utan e-post
+    public EfterInlogg() {
         initComponents();
+
+        // Försök att skapa en anslutning till databasen
         try {
             idb = new InfDB("mibdb", "3306", "mibdba", "mibkey");
-            System.out.println("funka");
+            System.out.println("Databasanslutning lyckades");
         } catch (InfException ettUndantag) {
-            JOptionPane.showMessageDialog(null, "Något gick fel!");
-            System.out.println("Internt felmeddelande" + ettUndantag.getMessage());
+            // Visa felmeddelande om det uppstår problem med databasanslutningen
+            JOptionPane.showMessageDialog(null, "Något gick fel vid anslutning till databasen!");
+            System.out.println("Internt felmeddelande: " + ettUndantag.getMessage());
         }
     }
 
-    /**
-     * Creates new form EfterInlogg with email
-     *
-     * @param epost
-     */
-    public EfterInlogg(String epost) {
+// Konstruktör för EfterInlogg med e-post
+    public EfterInlogg(String epost, String losenord) {
         initComponents();
         this.epost = epost;
+        nuvarandeLosenord = losenord;
+
+        // Uppdatera välkomstmeddelandet med användarens e-post
         lbValkommen.setText("Välkommen, " + epost + "!");
 
+        // Försök att skapa en anslutning till databasen
         try {
             idb = new InfDB("mibdb", "3306", "mibdba", "mibkey");
-            System.out.println("funka");
+            System.out.println("Databasanslutning lyckades");
         } catch (InfException ettUndantag) {
-            JOptionPane.showMessageDialog(null, "Något gick fel!");
-            System.out.println("Internt felmeddelande" + ettUndantag.getMessage());
+            // Visa felmeddelande om det uppstår problem med databasanslutningen
+            JOptionPane.showMessageDialog(null, "Något gick fel vid anslutning till databasen!");
+            System.out.println("Internt felmeddelande: " + ettUndantag.getMessage());
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -60,6 +68,7 @@ public class EfterInlogg extends javax.swing.JFrame {
         btnAndraLosenord = new javax.swing.JButton();
         txtNyttLosenord = new javax.swing.JTextField();
         lbAndraLosenord = new javax.swing.JLabel();
+        btnRegAlien = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -74,6 +83,13 @@ public class EfterInlogg extends javax.swing.JFrame {
 
         lbAndraLosenord.setText("Om du vill ändra lösenord:");
 
+        btnRegAlien.setText("Registera Alien");
+        btnRegAlien.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegAlienActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -81,25 +97,30 @@ public class EfterInlogg extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(btnAndraLosenord, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtNyttLosenord)
-                        .addComponent(lbAndraLosenord, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnAndraLosenord, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtNyttLosenord)
+                            .addComponent(lbAndraLosenord, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                        .addComponent(btnRegAlien))
                     .addComponent(lbValkommen, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(110, Short.MAX_VALUE))
+                .addGap(75, 75, 75))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(lbValkommen)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(lbAndraLosenord)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtNyttLosenord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(59, 59, 59)
-                .addComponent(btnAndraLosenord)
-                .addGap(94, 94, 94))
+                .addGap(72, 72, 72)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAndraLosenord)
+                    .addComponent(btnRegAlien))
+                .addGap(107, 107, 107))
         );
 
         pack();
@@ -107,25 +128,38 @@ public class EfterInlogg extends javax.swing.JFrame {
 
     private void btnAndraLosenordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAndraLosenordActionPerformed
 
-           try {
-              String nyttLosenord = txtNyttLosenord.getText();
-              if( nyttLosenord.length() <= 6){
+        try {
+            // Hämta det nya lösenordet från textfältet
+            String nyttLosenord = txtNyttLosenord.getText();
+
+            // Kontrollera om det nya lösenordet är 6 tecken eller kortare
+            if (nyttLosenord.length() <= 6) {
+                // Skapa SQL-frågan för att uppdatera lösenordet i databasen
                 String fraga = "UPDATE agent SET losenord ='" + nyttLosenord + "' WHERE epost = '" + epost + "'";
+
+                // Utför uppdateringen i databasen
                 idb.update(fraga);
+
+                // Uppdatera användargränssnittet med bekräftelsemeddelande
                 lbValkommen.setText("Lösenord är ändrat!");
-              }
-              else{
-                  JOptionPane.showMessageDialog(null, "För långt lösenord!");
-              }
-            } 
-           catch (InfException ex) 
-           {
-              JOptionPane.showMessageDialog(null, "Något gick fel!");
-              System.out.println("Internt felmeddelande" + ex.getMessage());
-              
-           }
-           
+            } else {
+                // Visa felmeddelande om lösenordet är för långt
+                JOptionPane.showMessageDialog(null, "För långt lösenord!");
+            }
+        } catch (InfException ex) {
+            // Visa felmeddelande om det uppstår ett internt fel
+            JOptionPane.showMessageDialog(null, "Något gick fel!");
+            System.out.println("Internt felmeddelande" + ex.getMessage());
+        }
     }//GEN-LAST:event_btnAndraLosenordActionPerformed
+
+    private void btnRegAlienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegAlienActionPerformed
+             
+        RegNyAlien nytt = new RegNyAlien();
+        EfterInlogg.this.setVisible(false);
+        nytt.setVisible(true);
+
+    }//GEN-LAST:event_btnRegAlienActionPerformed
 
     /**
      * @param args the command line arguments
@@ -164,6 +198,7 @@ public class EfterInlogg extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAndraLosenord;
+    private javax.swing.JButton btnRegAlien;
     private javax.swing.JLabel lbAndraLosenord;
     private javax.swing.JLabel lbValkommen;
     private javax.swing.JTextField txtNyttLosenord;

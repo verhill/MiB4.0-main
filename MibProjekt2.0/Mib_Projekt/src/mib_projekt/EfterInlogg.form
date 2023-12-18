@@ -26,14 +26,18 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="btnAndraLosenord" max="32767" attributes="0"/>
-                      <Component id="txtNyttLosenord" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lbAndraLosenord" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="btnAndraLosenord" max="32767" attributes="0"/>
+                          <Component id="txtNyttLosenord" alignment="0" max="32767" attributes="0"/>
+                          <Component id="lbAndraLosenord" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="52" max="32767" attributes="0"/>
+                      <Component id="btnRegAlien" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="lbValkommen" min="-2" pref="269" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="110" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -42,13 +46,16 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
               <Component id="lbValkommen" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="33" max="32767" attributes="0"/>
+              <EmptySpace pref="7" max="32767" attributes="0"/>
               <Component id="lbAndraLosenord" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="txtNyttLosenord" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
-              <Component id="btnAndraLosenord" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="94" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnAndraLosenord" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnRegAlien" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -73,6 +80,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Om du vill &#xe4;ndra l&#xf6;senord:"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnRegAlien">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Registera Alien"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRegAlienActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
