@@ -153,12 +153,37 @@ public class EfterInlogg extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAndraLosenordActionPerformed
 
+    private int getAlienID(String epost, String losenord) {
+        int agentID = -1;
+        try {
+            // Skapa SQL-frågan för att hämta Agent_ID baserat på e-post och lösenord
+            String fraga = "SELECT Agent_ID FROM agent WHERE epost = '" + epost + "' AND losenord = '" + losenord + "'";
+
+            // Utför frågan och hämta resultatet
+            String svar = idb.fetchSingle(fraga);
+
+            // Konvertera svar till int och sätt värdet för agentID
+            if (svar != null && !svar.isEmpty()) {
+                agentID = Integer.parseInt(svar);
+            }
+
+        } catch (InfException e) {
+            // Visa felmeddelande om det uppstår ett internt fel
+            JOptionPane.showMessageDialog(null, "Något gick fel!");
+            System.out.println("Internt felmeddelande" + e.getMessage());
+        }
+
+        return agentID;
+    }
     private void btnRegAlienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegAlienActionPerformed
              
-        RegNyAlien nytt = new RegNyAlien();
-        EfterInlogg.this.setVisible(false);
-        nytt.setVisible(true);
+        // Hämta agentID
+        int agentID = getAlienID(epost, nuvarandeLosenord);
 
+        // Skapa ett nytt objekt av RegNyAlien och skicka med agentID
+        RegNyAlien nytt = new RegNyAlien(agentID);
+        EfterInlogg.this.setVisible(false);
+        nytt.setVisible(true);;
     }//GEN-LAST:event_btnRegAlienActionPerformed
 
     /**

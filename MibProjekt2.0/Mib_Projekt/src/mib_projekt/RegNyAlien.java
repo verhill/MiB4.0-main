@@ -19,12 +19,28 @@ import oru.inf.InfException;
 public class RegNyAlien extends javax.swing.JFrame {
 
     private InfDB idb;
+    private int agentID;
 
     /**
      * Creates new form RegNyAlien
      */
     public RegNyAlien() {
         initComponents();
+
+        // Försök att skapa en anslutning till databasen
+        try {
+            idb = new InfDB("mibdb", "3306", "mibdba", "mibkey");
+            System.out.println("Databasanslutning lyckades");
+        } catch (InfException ettUndantag) {
+            // Visa felmeddelande om det uppstår problem med databasanslutningen
+            JOptionPane.showMessageDialog(null, "Något gick fel vid anslutning till databasen!");
+            System.out.println("Internt felmeddelande: " + ettUndantag.getMessage());
+        }
+    }
+
+    public RegNyAlien(int agentID) {
+        initComponents();
+        this.agentID = agentID;
 
         try {
             idb = new InfDB("mibdb", "3306", "mibdba", "mibkey");
@@ -141,7 +157,7 @@ public class RegNyAlien extends javax.swing.JFrame {
 
     private void btnRegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegActionPerformed
         // TODO add your handling 
-    try {
+        try {
             // Hämta värden från användarinmatning
             String epost = txtEpost.getText();
             String losenord = txtLosenord.getText();
@@ -160,11 +176,9 @@ public class RegNyAlien extends javax.swing.JFrame {
             String alienIDResult = idb.fetchSingle(fragaAlienID);
             int alienID = (alienIDResult != null) ? Integer.parseInt(alienIDResult) : 1;
 
-            
-
             // Bygg upp SQL-frågan för att registrera alien i databasen
-            String fragaRegistreraAlien = "INSERT INTO alien (Epost, Losenord, Alien_ID, Telefon, Plats, Namn, Registreringsdatum) VALUES "
-                + "('" + epost + "', '" + losenord + "', '" + alienID + "', '" + telefon + "', '" + platsID + "', '" + Namn + "', CURDATE());";
+            String fragaRegistreraAlien = "INSERT INTO alien (Epost, Losenord, Alien_ID, Telefon, Plats, Namn, Registreringsdatum, Ansvarig_Agent) VALUES "
+                    + "('" + epost + "', '" + losenord + "', '" + alienID + "', '" + telefon + "', '" + platsID + "', '" + Namn + "', CURDATE(),'" + agentID + "');";
 
             // Utför SQL-frågan för att registrera alien
             idb.insert(fragaRegistreraAlien);
@@ -177,7 +191,7 @@ public class RegNyAlien extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Något gick fel!");
             System.out.println("Internt felmeddelande" + ex.getMessage());
         }
-         
+
     }//GEN-LAST:event_btnRegActionPerformed
 
     private void fyllPlatsCBox() {
