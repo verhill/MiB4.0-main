@@ -4,6 +4,9 @@
  */
 package mib_projekt;
 
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import oru.inf.InfDB;
 import oru.inf.InfException;
@@ -17,6 +20,7 @@ public class EfterInlogg extends javax.swing.JFrame {
     private InfDB idb;
     private String epost;
     private String nuvarandeLosenord;
+
     /**
      * Skapar ett nytt EfterInlogg-fönster.
      */
@@ -69,6 +73,8 @@ public class EfterInlogg extends javax.swing.JFrame {
         txtNyttLosenord = new javax.swing.JTextField();
         lbAndraLosenord = new javax.swing.JLabel();
         btnRegAlien = new javax.swing.JButton();
+        btnAndraAlien = new javax.swing.JButton();
+        btnListaUtrustning = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -90,6 +96,20 @@ public class EfterInlogg extends javax.swing.JFrame {
             }
         });
 
+        btnAndraAlien.setText("Ändra Alien");
+        btnAndraAlien.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAndraAlienActionPerformed(evt);
+            }
+        });
+
+        btnListaUtrustning.setText("Lista Utrustning");
+        btnListaUtrustning.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListaUtrustningActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -98,14 +118,21 @@ public class EfterInlogg extends javax.swing.JFrame {
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnAndraLosenord, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtNyttLosenord)
-                            .addComponent(lbAndraLosenord, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
-                        .addComponent(btnRegAlien))
-                    .addComponent(lbValkommen, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(75, 75, 75))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnAndraLosenord, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtNyttLosenord)
+                                    .addComponent(lbAndraLosenord, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                                .addComponent(btnRegAlien))
+                            .addComponent(lbValkommen, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(75, 75, 75))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAndraAlien, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnListaUtrustning)
+                        .addGap(72, 72, 72))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -120,7 +147,11 @@ public class EfterInlogg extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAndraLosenord)
                     .addComponent(btnRegAlien))
-                .addGap(107, 107, 107))
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAndraAlien)
+                    .addComponent(btnListaUtrustning))
+                .addGap(47, 47, 47))
         );
 
         pack();
@@ -176,7 +207,7 @@ public class EfterInlogg extends javax.swing.JFrame {
         return agentID;
     }
     private void btnRegAlienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegAlienActionPerformed
-             
+
         // Hämta agentID
         int agentID = getAlienID(epost, nuvarandeLosenord);
 
@@ -185,6 +216,35 @@ public class EfterInlogg extends javax.swing.JFrame {
         EfterInlogg.this.setVisible(false);
         nytt.setVisible(true);;
     }//GEN-LAST:event_btnRegAlienActionPerformed
+
+    private void btnAndraAlienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAndraAlienActionPerformed
+        // TODO add your handling code here:
+        NamnAllaAlien nytt = new NamnAllaAlien();
+        EfterInlogg.this.setVisible(false);
+        nytt.setVisible(true);
+    }//GEN-LAST:event_btnAndraAlienActionPerformed
+
+    private void btnListaUtrustningActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaUtrustningActionPerformed
+
+        try {
+            String agentIdQuery = "SELECT AGENT_ID FROM AGENT WHERE epost = '" + epost + "';";
+            String resultatAgentID = idb.fetchSingle(agentIdQuery);
+            int agentID = Integer.parseInt(resultatAgentID);
+
+            String listaUtrustningQuery = "SELECT Benamning "
+                    + "FROM utrustning, innehar_utrustning "
+                    + "WHERE Agent_ID = " + agentID + " AND innehar_utrustning.Utrustnings_ID = utrustning.Utrustnings_ID";
+            ArrayList<String> utrustning = idb.fetchColumn(listaUtrustningQuery);
+            // Visa resultatet i ett popup-fönster
+            JOptionPane.showMessageDialog(null, "Utrustning:\n" + String.join("\n", utrustning), "Lista över Utrustning", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (InfException e) {
+            JOptionPane.showMessageDialog(null, "Något gick fel!");
+            System.out.println("Internt felmeddelande" + e.getMessage());
+        }
+
+
+    }//GEN-LAST:event_btnListaUtrustningActionPerformed
 
     /**
      * @param args the command line arguments
@@ -222,7 +282,9 @@ public class EfterInlogg extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAndraAlien;
     private javax.swing.JButton btnAndraLosenord;
+    private javax.swing.JButton btnListaUtrustning;
     private javax.swing.JButton btnRegAlien;
     private javax.swing.JLabel lbAndraLosenord;
     private javax.swing.JLabel lbValkommen;

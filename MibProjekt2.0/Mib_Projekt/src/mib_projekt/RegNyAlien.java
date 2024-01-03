@@ -4,10 +4,7 @@
  */
 package mib_projekt;
 
-import java.util.Date;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import oru.inf.InfDB;
 import oru.inf.InfException;
@@ -20,7 +17,7 @@ public class RegNyAlien extends javax.swing.JFrame {
 
     private InfDB idb;
     private int agentID;
-
+    private String columnName;
     /**
      * Creates new form RegNyAlien
      */
@@ -31,6 +28,7 @@ public class RegNyAlien extends javax.swing.JFrame {
         try {
             idb = new InfDB("mibdb", "3306", "mibdba", "mibkey");
             System.out.println("Databasanslutning lyckades");
+            fyllPlatsCBox();
         } catch (InfException ettUndantag) {
             // Visa felmeddelande om det uppstår problem med databasanslutningen
             JOptionPane.showMessageDialog(null, "Något gick fel vid anslutning till databasen!");
@@ -73,6 +71,10 @@ public class RegNyAlien extends javax.swing.JFrame {
         txtLosenord = new javax.swing.JTextField();
         lbTelefon = new javax.swing.JLabel();
         txtTelefon = new javax.swing.JTextField();
+        cbtnRas = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        txtInfoRas = new javax.swing.JTextField();
+        lbRasInfo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -93,14 +95,21 @@ public class RegNyAlien extends javax.swing.JFrame {
 
         lbTelefon.setText("Telefon:");
 
+        cbtnRas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Squid", "Worm", "Boglodite" }));
+        cbtnRas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbtnRasActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Ras:");
+
+        lbRasInfo.setText("Antal armar:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnReg, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53))
             .addGroup(layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,17 +119,29 @@ public class RegNyAlien extends javax.swing.JFrame {
                     .addComponent(txtTelefon, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(lbEpost, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtEpost, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(cbtnPlats, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbPlats, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbEpost, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtEpost, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(39, 39, 39)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtLosenord, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-                            .addComponent(lbLosenord, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(lbPlats, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(81, Short.MAX_VALUE))
+                            .addComponent(lbRasInfo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                                .addComponent(btnReg, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(50, 50, 50))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtInfoRas, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbtnRas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtLosenord, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+                                .addComponent(lbLosenord, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,18 +159,24 @@ public class RegNyAlien extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbTelefon)
-                            .addComponent(lbPlats))
+                            .addComponent(lbPlats)
+                            .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtTelefon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbtnPlats, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(cbtnPlats, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbtnRas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lbLosenord)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtLosenord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(80, 80, 80)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addComponent(lbRasInfo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtInfoRas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
                 .addComponent(btnReg)
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addGap(33, 33, 33))
         );
 
         pack();
@@ -171,7 +198,7 @@ public class RegNyAlien extends javax.swing.JFrame {
             String fragaPlatsID = "SELECT Plats_ID FROM plats WHERE Benamning = '" + valtPlatsNamn + "';";
             String platsID = idb.fetchSingle(fragaPlatsID);
 
-            // Hämta dagens datum från databasen
+            // Skapa nytt AlienID
             String fragaAlienID = "SELECT COALESCE(MAX(Alien_ID), 0) + 1 AS NextAlienID FROM Alien";
             String alienIDResult = idb.fetchSingle(fragaAlienID);
             int alienID = (alienIDResult != null) ? Integer.parseInt(alienIDResult) : 1;
@@ -183,6 +210,13 @@ public class RegNyAlien extends javax.swing.JFrame {
             // Utför SQL-frågan för att registrera alien
             idb.insert(fragaRegistreraAlien);
 
+            String InfoRas = txtInfoRas.getText();
+            int InfoRas1 = Integer.parseInt(InfoRas);
+
+            String rasTable = (String) cbtnRas.getSelectedItem();
+            String fragaRasAlien = "INSERT INTO " + rasTable + " (Alien_ID, " + columnName + ") VALUES (" + alienID + "," + InfoRas1 + ");";
+            // Utför SQL-frågan för att registrera alien
+            idb.insert(fragaRasAlien);
             // Visa meddelande om registreringen lyckades
             JOptionPane.showMessageDialog(null, "Alien registrerad!");
 
@@ -193,6 +227,21 @@ public class RegNyAlien extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnRegActionPerformed
+
+    private void cbtnRasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbtnRasActionPerformed
+        String ras = (String) cbtnRas.getSelectedItem();
+
+        if ("Squid".equals(ras)) {
+            lbRasInfo.setText("Antal armar:");
+            columnName = "Antal_Armar";
+        } else if ("Worm".equals(ras)) {
+            lbRasInfo.setText("Längd:");
+            columnName = "Langd";
+        } else if ("Boglodite".equals(ras)) {
+            lbRasInfo.setText("Antal Boogies:");
+            columnName = "Antal_Boogies";
+        }
+    }//GEN-LAST:event_cbtnRasActionPerformed
 
     private void fyllPlatsCBox() {
         try {
@@ -260,12 +309,16 @@ public class RegNyAlien extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnReg;
     private javax.swing.JComboBox<String> cbtnPlats;
+    private javax.swing.JComboBox<String> cbtnRas;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lbEpost;
     private javax.swing.JLabel lbLosenord;
     private javax.swing.JLabel lbNamn;
     private javax.swing.JLabel lbPlats;
+    private javax.swing.JLabel lbRasInfo;
     private javax.swing.JLabel lbTelefon;
     private javax.swing.JTextField txtEpost;
+    private javax.swing.JTextField txtInfoRas;
     private javax.swing.JTextField txtLosenord;
     private javax.swing.JTextField txtNamn;
     private javax.swing.JTextField txtTelefon;
