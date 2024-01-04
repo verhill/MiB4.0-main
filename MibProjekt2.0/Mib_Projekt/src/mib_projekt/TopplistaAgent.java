@@ -4,8 +4,14 @@
  */
 package mib_projekt;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import oru.inf.InfException;
 import oru.inf.InfDB;
 
@@ -16,16 +22,17 @@ import oru.inf.InfDB;
 public class TopplistaAgent extends javax.swing.JFrame {
 
     private InfDB idb;
+    private int omradeID;
 
     /**
-     * Creates new form TopplistaAgent
+     * Skapar en ny klass TopplistaAgent
      */
     public TopplistaAgent() {
         initComponents();
         try {
             idb = new InfDB("mibdb", "3306", "mibdba", "mibkey");
             System.out.println("Databasanslutning lyckades");
-            fyllPlatsCBox();
+            fyllOmradesCBox();
         } catch (InfException ettUndantag) {
             // Visa felmeddelande om det uppstår problem med databasanslutningen
             JOptionPane.showMessageDialog(null, "Något gick fel vid anslutning till databasen!");
@@ -55,7 +62,7 @@ public class TopplistaAgent extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("jLabel1");
+        jLabel1.setText("Område:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -68,8 +75,8 @@ public class TopplistaAgent extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(150, 150, 150)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbtnPlats, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbtnPlats, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(157, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -87,7 +94,7 @@ public class TopplistaAgent extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void fyllPlatsCBox() {
+    private void fyllOmradesCBox() {
         try {
             // SQL-fråga för att hämta Plats_ID och Benamning från plats-tabellen
             String fraga = "SELECT Omrades_ID, Benamning FROM omrade;";
@@ -97,15 +104,15 @@ public class TopplistaAgent extends javax.swing.JFrame {
             // Iterera över varje rad i resultatet
             for (HashMap<String, String> rad : resultat) {
                 // Hämta Plats_ID och Benamning från raden
-                String platsIdStr = rad.get("Omrades_ID");
-                String platsNamn = rad.get("Benamning");
+                String OmradesIdStr = rad.get("Omrades_ID");
+                String OmradesNamn = rad.get("Benamning");
 
                 // Kontrollera om Plats_ID är inte null
-                if (platsIdStr != null) {
+                if (OmradesIdStr != null) {
                     // Konvertera Plats_ID till integer
-                    int platsId = Integer.parseInt(platsIdStr);
+                    omradeID = Integer.parseInt(OmradesIdStr);
                     // Lägg till Benamning i dropdown-menyn
-                    cbtnPlats.addItem(platsNamn);
+                    cbtnPlats.addItem(OmradesNamn);
                 }
             }
         } catch (InfException ex) {
@@ -117,9 +124,67 @@ public class TopplistaAgent extends javax.swing.JFrame {
 
 
     private void btnListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaActionPerformed
-        // TODO add your handling code here:
+        try {
+            // Hämta det valda området från comboboxen
+            String selectedOmrade = (String) cbtnPlats.getSelectedItem();
 
+            // Omvandla det valda området till omradesID
+            omradeID = getOmradeIDFromComboBox(selectedOmrade);
+
+            // SQL-fråga för att hämta topp 3 agenter baserat på det valda området
+            String fraga = "SELECT Agent.Namn, COUNT(*) FROM Agent "
+                    + "JOIN Alien ON Agent_ID = Ansvarig_Agent "
+                    + "JOIN Plats ON Alien.Plats = Plats_ID "
+                    + "WHERE Finns_I = " + omradeID + " "
+                    + "GROUP BY Agent.Namn "
+                    + "ORDER BY 2 DESC "
+                    + "LIMIT 3;";
+
+            // Utför SQL-frågan och få resultatet från databasen
+            ArrayList<HashMap<String, String>> resultat = idb.fetchRows(fraga);
+
+            // Skapa en modell för listan och fyll den med resultatet
+            DefaultListModel<String> listModel = new DefaultListModel<>();
+            for (HashMap<String, String> row : resultat) {
+                listModel.addElement("Agent: " + row.get("Namn") + ", Count: " + row.get("COUNT(*)"));
+            }
+
+            // Skapa en JList med modellen
+            JList<String> resultList = new JList<>(listModel);
+
+            // Skapa en JScrollPane för JList om det finns många rader
+            JScrollPane scrollPane = new JScrollPane(resultList);
+
+            // Visa ett popup-fönster med listan
+            JOptionPane.showMessageDialog(null, scrollPane, "Topplista Agent", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (InfException ex) {
+            // Hantera undantag om något går fel vid databasanropet
+            Logger.getLogger(TopplistaAgent.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnListaActionPerformed
+
+    private int getOmradeIDFromComboBox(String selectedOmrade) {
+        // Försök hämta Omrades_ID från databasen baserat på det valda området
+        try {
+            // SQL-fråga för att hämta Omrades_ID från omrade-tabellen
+            String fraga = "SELECT Omrades_ID FROM omrade WHERE Benamning = '" + selectedOmrade + "';";
+
+            // Utför SQL-frågan och få resultatet
+            var resultat = idb.fetchRows(fraga);
+
+            // Kontrollera om resultatet inte är tomt
+            if (!resultat.isEmpty()) {
+                // Returnera Omrades_ID som en integer
+                return Integer.parseInt(resultat.get(0).get("Omrades_ID"));
+            }
+        } catch (InfException ex) {
+            // Hantera undantag om något går fel vid databasanropet
+            JOptionPane.showMessageDialog(null, "Något gick fel vid hämtning av Omrades_ID!");
+            System.out.println("Internt felmeddelande" + ex.getMessage());
+        }
+        return -1; // Returnera ett ogiltigt värde om något går fel
+    }
 
     /**
      * @param args the command line arguments

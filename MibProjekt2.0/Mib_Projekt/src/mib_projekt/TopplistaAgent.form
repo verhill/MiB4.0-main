@@ -31,8 +31,8 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="150" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabel1" min="-2" pref="37" max="-2" attributes="0"/>
                   <Component id="cbtnPlats" min="-2" pref="93" max="-2" attributes="0"/>
+                  <Component id="jLabel1" min="-2" pref="63" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="157" max="32767" attributes="0"/>
           </Group>
@@ -73,7 +73,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel1"/>
+        <Property name="text" type="java.lang.String" value="Omr&#xe5;de:"/>
       </Properties>
     </Component>
   </SubComponents>
